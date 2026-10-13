@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import OpenAI, responses
+from openai.types.completion_usage import PromptTokensDetails
 
 load_dotenv()
 api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -22,7 +23,17 @@ def main():
     print("Hello from ai-agent!")
     if not api_key:
         raise RuntimeError("API key is none!")
-    print(response.choices[0].message.content)
+
+    if response.usage == None:
+        raise RuntimeError("Usage is None!")
+
+    prompt_tokens = response.usage.prompt_tokens
+    completion_tokens = response.usage.completion_tokens
+
+    print(f"Prompt tokens: {prompt_tokens}")
+    print(f"Response tokens: {completion_tokens}")
+
+    print(f"Response: \n{response.choices[0].message.content}")
 
 
 if __name__ == "__main__":
