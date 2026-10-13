@@ -2,21 +2,12 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI, responses
 from openai.types.completion_usage import PromptTokensDetails
+import argparse
 
 load_dotenv()
 api_key = os.environ.get("OPENROUTER_API_KEY")
 
 client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
-
-response = client.chat.completions.create(
-    model="openrouter/free",
-    messages=[
-        {
-            "role": "user",
-            "content": "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum.",
-        }
-    ],
-)
 
 
 def main():
@@ -24,6 +15,14 @@ def main():
     if not api_key:
         raise RuntimeError("API key is none!")
 
+    parser = argparse.ArgumentParser(description="Chatbot")
+    parser.add_argument("user_prompt", type=str, help="User prompt")
+    args = parser.parse_args()
+
+    response = client.chat.completions.create(
+        model="openrouter/free",
+        messages=[{"role": "user", "content": args.user_prompt}],
+    )
     if response.usage == None:
         raise RuntimeError("Usage is None!")
 
