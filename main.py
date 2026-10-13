@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI, responses
+from openai.types.chat import ChatCompletionMessageParam
 from openai.types.completion_usage import PromptTokensDetails
 import argparse
 
@@ -19,9 +20,13 @@ def main():
     parser.add_argument("user_prompt", type=str, help="User prompt")
     args = parser.parse_args()
 
+    messages: list[ChatCompletionMessageParam] = [
+        {"role": "user", "content": args.user_prompt},
+    ]
+
     response = client.chat.completions.create(
         model="openrouter/free",
-        messages=[{"role": "user", "content": args.user_prompt}],
+        messages=messages,
     )
     if response.usage == None:
         raise RuntimeError("Usage is None!")
