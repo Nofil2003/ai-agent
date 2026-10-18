@@ -1,1 +1,6 @@
-pycache/ *.pyc .python-version .env .venv/ venv/
+pycache/ 
+*.pyc 
+.python-version 
+.env 
+.venv/ 
+venv/
